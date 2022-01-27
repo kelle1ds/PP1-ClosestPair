@@ -24,12 +24,13 @@ public class ClosestPair {
 	public static void main(String[] args) throws IOException {
 
 		/* load data from points.txt here */
-		File file = new File("points.txt");
-		FileReader inputFil = new FileReader(file);
-		Scanner scanner = new Scanner(inputFil);
-		ArrayList<Point> P = new ArrayList<>();
-		ArrayList<Point> Q = new ArrayList<>();
-		int i = 0;
+		File file = new File("points.txt"); //file to read
+		FileReader inputFil = new FileReader(file);  //reader
+		Scanner scanner = new Scanner(inputFil);  //scanner
+		ArrayList<Point> P = new ArrayList<>();  //P array for holding sorted X values
+		ArrayList<Point> Q = new ArrayList<>();  //Q array for holding sorted Y values
+		int i = 0; //Used to count number of points
+
 		while(scanner.hasNext()) {
 			String token1 = scanner.next();
 			String replaced = token1.replaceAll("[()]", "");
@@ -46,39 +47,29 @@ public class ClosestPair {
 			Q.add(point);
 			i++;  //count number of points
 		}
-		scanner.close();
+		scanner.close();  //Close that there scanner thingy
 
 		//out.writeFloat(floatarray[i]);
 		/* use your sort method here */
 
-		//MergeSortX sortX = new MergeSortX(P);
-		MergeSort sortX = new MergeSort(P,0);
+		MergeSort sortX = new MergeSort(P,0);  //Side 0 is for point.x values
 		//mergeSort.sort(array);
-		sortX.sortGivenArray();
+		sortX.sortGivenArray();  //Sort it
 
-		P = sortX.getSortedArray();
+		P = sortX.getSortedArray();  //Return sorted array back to P
 
 		//MergeSortY sortY = new MergeSortY(Q);
-		MergeSort sortY = new MergeSort(Q,1);
-		sortY.sortGivenArray();
-		Q = sortY.getSortedArray();
-		printArray(P);
+		MergeSort sortY = new MergeSort(Q,1); //Any side other than 1 is point.y
+		sortY.sortGivenArray();  //sort it
+		Q = sortY.getSortedArray();  //Return to Q array
+
+		printArray(P);  //Print provided array.
 
 		/* call efficientClosestPair here */
 
 	}
 
-	/* A utility function to print array of size n */
-	static void printArray(ArrayList<Point> arr)
-	{
-		ListIterator<Point> iterator = arr.listIterator(2);
-		while(iterator.hasNext()) {
-			Point point = iterator.next();
-			System.out.println(point);
-		}
 
-		System.out.println();
-	}
 
 	public static PointPair efficientClosestPair(ArrayList<Point> pointsXOrdered, ArrayList<Point> pointsYOrdered) {
 
@@ -102,7 +93,17 @@ public class ClosestPair {
 		return null;
 	}
 
+	/* A utility function to print array of size n */
+	public static void printArray(ArrayList<Point> arr)
+	{
+		ListIterator<Point> iterator = arr.listIterator(2);
+		while(iterator.hasNext()) {
+			Point point = iterator.next();
+			System.out.println(point);
+		}
 
+		System.out.println();
+	}
 
 }
 
