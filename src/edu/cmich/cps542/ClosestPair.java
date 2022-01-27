@@ -51,16 +51,18 @@ public class ClosestPair {
 		//out.writeFloat(floatarray[i]);
 		/* use your sort method here */
 
-		MergeSortX sortX = new MergeSortX(P);
+		//MergeSortX sortX = new MergeSortX(P);
+		MergeSort sortX = new MergeSort(P,0);
 		//mergeSort.sort(array);
 		sortX.sortGivenArray();
 
 		P = sortX.getSortedArray();
 
-		MergeSortY sortY = new MergeSortY(Q);
+		//MergeSortY sortY = new MergeSortY(Q);
+		MergeSort sortY = new MergeSort(Q,1);
 		sortY.sortGivenArray();
 		Q = sortY.getSortedArray();
-		printArray(Q);
+		printArray(P);
 
 		/* call efficientClosestPair here */
 
@@ -106,17 +108,24 @@ public class ClosestPair {
 
 /* Java class for Merge Sort with arraylist*/
 
-class MergeSortX{
+class MergeSort{
 	private ArrayList<Point> inputArrayX;  //Array for holding values
+	private int side = 0;
+
 
 	public ArrayList<Point> getSortedArray() {
 
 		return inputArrayX;
 	}
 
-	public MergeSortX(ArrayList<Point> inputArray){
+	public MergeSort(ArrayList<Point> inputArray){
 
 		this.inputArrayX = inputArray;
+	}
+	public MergeSort(ArrayList<Point> inputArray, int side){
+
+		this.inputArrayX = inputArray;
+		this.side = side;
 	}
 
 	public void sortGivenArray(){
@@ -147,19 +156,35 @@ class MergeSortX{
 		int leftIndex = startIndex;
 		int rightIndex = midIndex+1;
 
-		while(leftIndex<=midIndex && rightIndex<=endIndex){
-			//if(inputArray.get(leftIndex).x)
-			if(inputArrayX.get(leftIndex).x <= inputArrayX.get(rightIndex).x) {
+		if(side == 0) {
+			//System.out.println("X value");
+			while (leftIndex <= midIndex && rightIndex <= endIndex) {
+				//if(inputArray.get(leftIndex).x)
+				if (inputArrayX.get(leftIndex).x <= inputArrayX.get(rightIndex).x) {
 
-				mergedSortedArray.add(inputArrayX.get(leftIndex));
-				leftIndex++;
+					mergedSortedArray.add(inputArrayX.get(leftIndex));
+					leftIndex++;
 
-			}else{
-				mergedSortedArray.add(inputArrayX.get(rightIndex));
-				rightIndex++;
+				} else {
+					mergedSortedArray.add(inputArrayX.get(rightIndex));
+					rightIndex++;
+				}
+			}
+		}else{
+			//System.out.println("Y value");
+			while (leftIndex <= midIndex && rightIndex <= endIndex) {
+				//if(inputArray.get(leftIndex).x)
+				if (inputArrayX.get(leftIndex).y <= inputArrayX.get(rightIndex).y) {
+
+					mergedSortedArray.add(inputArrayX.get(leftIndex));
+					leftIndex++;
+
+				} else {
+					mergedSortedArray.add(inputArrayX.get(rightIndex));
+					rightIndex++;
+				}
 			}
 		}
-
 		//Either of below while loop will execute
 		while(leftIndex<=midIndex){
 			mergedSortedArray.add(inputArrayX.get(leftIndex));
@@ -183,6 +208,7 @@ class MergeSortX{
 
 }
 
+/*
 class MergeSortY{
 	private ArrayList<Point> inputArray;
 
@@ -256,3 +282,4 @@ class MergeSortY{
 
 }
 
+*/
