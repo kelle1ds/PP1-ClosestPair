@@ -24,7 +24,7 @@ public class ClosestPair {
 	public static void main(String[] args) throws IOException {
 
 		/* load data from points.txt here */
-		File file = new File("points2.txt"); //file to read
+		File file = new File("points3.txt"); //file to read
 		FileReader inputFil = new FileReader(file);  //reader
 		Scanner scanner = new Scanner(inputFil);  //scanner
 		ArrayList<Point> P = new ArrayList<>();  //P array for holding sorted X values
@@ -64,7 +64,7 @@ public class ClosestPair {
 		sortY.sortGivenArray();  //sort it
 		Q = sortY.getSortedArray();  //Return to Q array
 
-		printArray(P);  //Print provided array.
+		//printArray(P);  //Print provided array.
 
 		/* call efficientClosestPair here */
 		PointPair point = efficientClosestPair(P,Q);
@@ -73,29 +73,72 @@ public class ClosestPair {
 
 
 	public static PointPair efficientClosestPair(ArrayList<Point> pointsXOrdered, ArrayList<Point> pointsYOrdered) {
-		System.out.println("Size is: " + pointsXOrdered.size());
-		if(pointsXOrdered.size() <= 2){
+		System.out.println("Number of points: " + pointsXOrdered.size());
+		if(pointsXOrdered.size() == 0) return null;
+		else if (pointsXOrdered.size() <= 2){  //for 2 or 3 points
 			ArrayList<Point> brute = new ArrayList<>();
-			Point point1 = new Point(pointsXOrdered.get(0).x, pointsXOrdered.get(0).y);
-			Point point2 = new Point(pointsXOrdered.get(1).x, pointsXOrdered.get(1).y);
-			brute.add(point1);
-			brute.add(point2);
-			bruteClosestPair(brute);
+			for(int i = 0; i <= pointsXOrdered.size()-1;i++){
+				Point point = new Point(pointsXOrdered.get(i).x, pointsXOrdered.get(i).y);
+				brute.add(point);
+
+			}
+			return bruteClosestPair(brute);
+			//return pair2;
 
 		} else {
 			System.out.println("efficientClosestPair");
+
+			ArrayList<Point> Pl = new ArrayList<>();
+			for(int i = 0; i < pointsXOrdered.size()/2-1;i++){
+				Pl.add(pointsXOrdered.get(i));
+			}
+			ArrayList<Point> Pr = new ArrayList<>();
+			for(int i = pointsXOrdered.size(); i < pointsXOrdered.size()-1;i++){
+				Pr.add(pointsXOrdered.get(i));
+			}
+			ArrayList<Point> Ql = new ArrayList<>();
+			for(int i = 0; i < pointsYOrdered.size()/2-1;i++){
+				Ql.add(pointsYOrdered.get(i));
+			}
+			ArrayList<Point> Qr = new ArrayList<>();
+			for(int i = pointsYOrdered.size(); i < pointsYOrdered.size()-1;i++){
+				Pr.add(pointsYOrdered.get(i));
+			}
+
+			PointPair left = efficientClosestPair(Pl,Ql);
+			PointPair right = efficientClosestPair(Pr,Qr);
+
 			return null;
 		}
 
-		return null;
+		//return null;
 
 	}
 
 	public static PointPair bruteClosestPair(ArrayList<Point> points) {
-		System.out.println("efficientClosestPair less than two");
+		System.out.println("Brute Closest Pair Size = " + points.size());
+		//PointPair pointPair = new PointPair(points.get(0),points.get(1));
+		double d = 0;
+		int index = 0;
+		for(int i = 0; i < points.size()-1; i++){
+			for(int j = i +1; j < points.size(); j++){
+
+				double dist = Math.sqrt(Math.pow((points.get(i).x - points.get(j).x), 2) +
+						Math.pow((points.get(i).y - points.get(j).y), 2));
+				if(d <= dist){
+					d = dist;
+
+				}
+
+			}
+			//index = i;
+		}
+
+		System.out.println("Closest distance is: " + d);
+		//System.out.println(points);
+		//System.out.println("index is: " + index);
 		PointPair pointPair = new PointPair(points.get(0),points.get(1));
-		System.out.println("Less than two points");
-		return pointPair;
+		return null;
 	}
 
 
