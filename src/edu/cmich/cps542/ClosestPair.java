@@ -29,9 +29,10 @@ public class ClosestPair {
 		Scanner scanner = new Scanner(inputFil);  //scanner
 		ArrayList<Point> P = new ArrayList<>();  //P array for holding sorted X values
 		ArrayList<Point> Q = new ArrayList<>();  //Q array for holding sorted Y values
+
 		int i = 0; //Used to count number of points
 
-		while(scanner.hasNext()) {
+		while (scanner.hasNext()) {
 			String token1 = scanner.next();
 			String replaced = token1.replaceAll("[()]", "");
 			String replaced2 = replaced.replaceAll("[,]", "");
@@ -42,7 +43,7 @@ public class ClosestPair {
 			String replace2 = replace1.replaceAll("[,]", "");
 			String replace3 = replace2.replaceAll("\\r\\n|\\r|\\n", " ");
 			float num2 = Float.parseFloat(replace3);
-			Point point = new Point(num1,num2);
+			Point point = new Point(num1, num2);
 			P.add(point);
 			Q.add(point);
 			i++;  //count number of points
@@ -52,14 +53,14 @@ public class ClosestPair {
 		//out.writeFloat(floatarray[i]);
 		/* use your sort method here */
 
-		MergeSort sortX = new MergeSort(P,0);  //Side 0 is for point.x values
+		MergeSort sortX = new MergeSort(P, 0);  //Side 0 is for point.x values
 		//mergeSort.sort(array);
 		sortX.sortGivenArray();  //Sort it
 
 		P = sortX.getSortedArray();  //Return sorted array back to P
 
 		//MergeSortY sortY = new MergeSortY(Q);
-		MergeSort sortY = new MergeSort(Q,1); //Any side other than 1 is point.y
+		MergeSort sortY = new MergeSort(Q, 1); //Any side other than 1 is point.y
 		sortY.sortGivenArray();  //sort it
 		Q = sortY.getSortedArray();  //Return to Q array
 
@@ -68,7 +69,6 @@ public class ClosestPair {
 		/* call efficientClosestPair here */
 
 	}
-
 
 
 	public static PointPair efficientClosestPair(ArrayList<Point> pointsXOrdered, ArrayList<Point> pointsYOrdered) {
@@ -93,6 +93,7 @@ public class ClosestPair {
 		return null;
 	}
 
+	////////////////////////////////////////////////////////////////////
 	/* A utility function to print array of size n */
 	public static void printArray(ArrayList<Point> arr)
 	{
@@ -104,15 +105,13 @@ public class ClosestPair {
 
 		System.out.println();
 	}
-
 }
 
 /* Java class for Merge Sort with arraylist*/
-
+//Changes are comming
 class MergeSort{
 	private ArrayList<Point> inputArrayX;  //Array for holding values
 	private int side = 0;
-
 
 	public ArrayList<Point> getSortedArray() {
 
@@ -151,14 +150,12 @@ class MergeSort{
 
 	public void merge(int startIndex,int midIndex,int endIndex){
 
-		//Below is the mergedarray that will be sorted array Array[i-midIndex] , Array[(midIndex+1)-endIndex]
 		ArrayList<Point> mergedSortedArray = new ArrayList<>();
 
 		int leftIndex = startIndex;
 		int rightIndex = midIndex+1;
 
 		if(side == 0) {
-			//System.out.println("X value");
 			while (leftIndex <= midIndex && rightIndex <= endIndex) {
 				//if(inputArray.get(leftIndex).x)
 				if (inputArrayX.get(leftIndex).x <= inputArrayX.get(rightIndex).x) {
@@ -172,7 +169,6 @@ class MergeSort{
 				}
 			}
 		}else{
-			//System.out.println("Y value");
 			while (leftIndex <= midIndex && rightIndex <= endIndex) {
 				//if(inputArray.get(leftIndex).x)
 				if (inputArrayX.get(leftIndex).y <= inputArrayX.get(rightIndex).y) {
@@ -186,7 +182,6 @@ class MergeSort{
 				}
 			}
 		}
-		//Either of below while loop will execute
 		while(leftIndex<=midIndex){
 			mergedSortedArray.add(inputArrayX.get(leftIndex));
 			leftIndex++;
@@ -199,7 +194,7 @@ class MergeSort{
 
 		int i = 0;
 		int j = startIndex;
-		//Setting sorted array to original one
+		//Sorted array copied to original one
 		while(i<mergedSortedArray.size()){
 			inputArrayX.set(j, mergedSortedArray.get(i++));
 			j++;
@@ -209,78 +204,3 @@ class MergeSort{
 
 }
 
-/*
-class MergeSortY{
-	private ArrayList<Point> inputArray;
-
-	public ArrayList<Point> getSortedArray() {
-		return inputArray;
-	}
-
-	public MergeSortY(ArrayList<Point> inputArray){
-		this.inputArray = inputArray;
-	}
-
-	public void sortGivenArray(){
-		divide(0, this.inputArray.size()-1);
-	}
-
-	public void divide(int startIndex,int endIndex){
-
-		//Divide till you breakdown your list to single element
-		if(startIndex<endIndex && (endIndex-startIndex)>=1){
-			int mid = (endIndex + startIndex)/2;
-			divide(startIndex, mid);
-			divide(mid+1, endIndex);
-
-			//merging Sorted array produce above into one sorted array
-			merge(startIndex,mid,endIndex);
-		}
-	}
-
-
-	public void merge(int startIndex,int midIndex,int endIndex){
-
-		//Below is the mergedarray that will be sorted array Array[i-midIndex] , Array[(midIndex+1)-endIndex]
-		ArrayList<Point> mergedSortedArray = new ArrayList<>();
-
-		int leftIndex = startIndex;
-		int rightIndex = midIndex+1;
-
-		while(leftIndex<=midIndex && rightIndex<=endIndex){
-			//if(inputArray.get(leftIndex).x)
-			if(inputArray.get(leftIndex).y <= inputArray.get(rightIndex).y) {
-
-				mergedSortedArray.add(inputArray.get(leftIndex));
-				leftIndex++;
-
-			}else{
-				mergedSortedArray.add(inputArray.get(rightIndex));
-				rightIndex++;
-			}
-		}
-
-		//Either of below while loop will execute
-		while(leftIndex<=midIndex){
-			mergedSortedArray.add(inputArray.get(leftIndex));
-			leftIndex++;
-		}
-
-		while(rightIndex<=endIndex){
-			mergedSortedArray.add(inputArray.get(rightIndex));
-			rightIndex++;
-		}
-
-		int i = 0;
-		int j = startIndex;
-		//Setting sorted array to original one
-		while(i<mergedSortedArray.size()){
-			inputArray.set(j, mergedSortedArray.get(i++));
-			j++;
-		}
-	}
-
-
-}
-
-*/
