@@ -24,7 +24,7 @@ public class ClosestPair {
 	public static void main(String[] args) throws IOException {
 
 		/* load data from points.txt here */
-		File file = new File("points.txt"); //file to read
+		File file = new File("points2.txt"); //file to read
 		FileReader inputFil = new FileReader(file);  //reader
 		Scanner scanner = new Scanner(inputFil);  //scanner
 		ArrayList<Point> P = new ArrayList<>();  //P array for holding sorted X values
@@ -67,21 +67,35 @@ public class ClosestPair {
 		printArray(P);  //Print provided array.
 
 		/* call efficientClosestPair here */
+		PointPair point = efficientClosestPair(P,Q);
 
 	}
 
 
 	public static PointPair efficientClosestPair(ArrayList<Point> pointsXOrdered, ArrayList<Point> pointsYOrdered) {
+		System.out.println("Size is: " + pointsXOrdered.size());
+		if(pointsXOrdered.size() <= 2){
+			ArrayList<Point> brute = new ArrayList<>();
+			Point point1 = new Point(pointsXOrdered.get(0).x, pointsXOrdered.get(0).y);
+			Point point2 = new Point(pointsXOrdered.get(1).x, pointsXOrdered.get(1).y);
+			brute.add(point1);
+			brute.add(point2);
+			bruteClosestPair(brute);
+
+		} else {
+			System.out.println("efficientClosestPair");
+			return null;
+		}
 
 		return null;
 
 	}
 
 	public static PointPair bruteClosestPair(ArrayList<Point> points) {
-
-
-		return null;
-
+		System.out.println("efficientClosestPair less than two");
+		PointPair pointPair = new PointPair(points.get(0),points.get(1));
+		System.out.println("Less than two points");
+		return pointPair;
 	}
 
 
