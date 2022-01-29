@@ -13,12 +13,12 @@ package edu.cmich.cps542;
 
 import java.util.ArrayList;
 import java.io.*;
-//import java.util.List;
 import java.util.ListIterator;
-//import java.util.Random;
 import java.util.Scanner;
-//import java.util.stream.Collectors;
 
+/**
+ * Pefo
+ */
 public class ClosestPair {
 
 	public static void main(String[] args) throws IOException {
@@ -67,14 +67,15 @@ public class ClosestPair {
 
 		PointPair pointV = efficientClosestPair(P,Q);
 
+		System.out.println("final point pair is " + pointV.toString());
+
 		//PointPair pointR = efficientClosestPair(Pr,Qr);
 
 	}
 
 
 	public static PointPair efficientClosestPair(ArrayList<Point> pointsXOrdered, ArrayList<Point> pointsYOrdered) {
-		//System.out.println("Number of points: " + pointsXOrdered.size());
-		//printArray(pointsXOrdered);
+
 		int sizeV = Math.max(pointsXOrdered.size(), pointsXOrdered.size());
 		//if(pointsXOrdered.size() == 0) return null;
 		if (sizeV <= 3){  //for 2 or 3 points
@@ -83,16 +84,14 @@ public class ClosestPair {
 				Point point = new Point(pointsXOrdered.get(i).x, pointsXOrdered.get(i).y);
 				brute.add(point);
 			}
+			PointPair pointReturn = bruteClosestPair(brute);
+			System.out.println("Point Pair Returned is: " + pointReturn.a);
 
-			return bruteClosestPair(brute);
-
+			return pointReturn; //bruteClosestPair(brute);  //This will return a point pair
 
 		} else {
 
 			System.out.println("efficientClosestPair Round ");
-			//printArray(pointsXOrdered);
-			//printArray(pointsYOrdered);
-
 
 			int sizeX = pointsXOrdered.size();
 			System.out.println("Size of X " + sizeX);
@@ -130,15 +129,64 @@ public class ClosestPair {
 			printArray(Qr);
 
 			/////////////////////////////
-			System.out.println("EffiicentClosestPair");
-			PointPair dist = efficientClosestPair(Pl,Ql);
 
+			PointPair left = efficientClosestPair(Pl,Ql);
 
 			PointPair right = efficientClosestPair(Pr,Qr);
-			//System.out.println("Size of Pr is " + right);
 
+			PointPair minPoint;
 
-			return null;
+			if(left.distBetweenPoints() >= right.distBetweenPoints()){
+				minPoint = right; //new PointPair(right.a,right.b);
+			} else {
+				minPoint = left;
+			}
+
+			double d = Math.min(left.distBetweenPoints(), right.distBetweenPoints());
+
+			System.out.println("Minimum distance is: " + d);
+
+			double m = pointsXOrdered.get(halfSizeX-1).x;  //get mid-x value from P
+
+			ArrayList<Point> S = new ArrayList<>();  //array to hold points to compare
+			for(int i = 0; i < pointsXOrdered.size(); i++){
+				double x = pointsXOrdered.get(i).x;
+				if (Math.abs(x-m) < d){
+					S.add(pointsXOrdered.get(i));
+				}
+			}
+			double dminsq = d*d;
+			System.out.print("dminsq = " + dminsq);
+
+			int indexI = 0;
+			int indexK = 0;
+			for (int i = 0; i < S.size()-2; i++){
+				int k = i + 1;
+				while ((k <= S.size() - 1) && (S.get(i).y < dminsq)){
+					double point1X = S.get(k).x;
+					double point1Y = S.get(k).y;
+					double point2X = S.get(i).x;
+					double point2Y = S.get(i).y;
+
+					dminsq = Math.min(Math.pow(point1X - point2X,2) +  Math.pow(point1Y - point2Y,2),dminsq);
+					indexK = k;
+					k = k + 1;
+				}
+				indexI = i;  //Used to return closest pair
+
+			}
+
+			PointPair midPoints = new PointPair(S.get(indexK), S.get(indexI));
+			System.out.println(minPoint);
+			System.out.println(midPoints);
+
+			PointPair returnedPoint;
+			if(midPoints.distBetweenPoints() >= minPoint.distBetweenPoints()){
+				return minPoint;
+			} else {
+				return midPoints;
+			}
+
 		}
 
 		//return null;
@@ -152,26 +200,24 @@ public class ClosestPair {
 		int indexI = 0;
 		int indexJ = 0;
 		for(int i = 0; i < points.size(); i++){
-			for(int j = i +1; j < points.size(); j++){
+			for(int j = i + 1; j < points.size(); j++){
 
 				double dist = Math.sqrt(Math.pow((points.get(i).x - points.get(j).x), 2) +
 						Math.pow((points.get(i).y - points.get(j).y), 2));
 
-
 				if(d <= dist){
-					indexI = i;
+					indexI = i;  //Used to return closest pair
 					indexJ = j;
 					d = dist;
 				}
-			}//index = i;
+			}
 		}
 
 		System.out.println("Closest distance is: " + d);
 
 		System.out.println("points in bruteforce:");
 		printArray(points);
-		//Point point1 = new Point()
-		PointPair pointPair = new PointPair(points.get(indexI),points.get(indexJ));
+		PointPair pointPair = new PointPair(points.get(indexI),points.get(indexJ)); //Returned pair
 		System.out.println("returned point pair from brute " + pointPair);
 		return pointPair;
 	}
