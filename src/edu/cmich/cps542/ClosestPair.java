@@ -30,7 +30,7 @@ public class ClosestPair {
 		ArrayList<Point> P = new ArrayList<>();  //P array for holding sorted X values
 		ArrayList<Point> Q = new ArrayList<>();  //Q array for holding sorted Y values
 
-		int i = 0; //Used to count number of points
+		int k = 0; //Used to count number of points
 
 		while (scanner.hasNext()) {
 			String token1 = scanner.next();
@@ -46,11 +46,11 @@ public class ClosestPair {
 			Point point = new Point(num1, num2);
 			P.add(point);
 			Q.add(point);
-			i++;  //count number of points
+			k++;  //count number of points
 		}
 		scanner.close();  //Close that there scanner thingy
 
-		//out.writeFloat(floatarray[i]);
+		//out.writeFloat(floatarray[k]);
 		/* use your sort method here */
 
 		MergeSort sortX = new MergeSort(P, 0);  //Side 0 is for point.x values
@@ -64,10 +64,10 @@ public class ClosestPair {
 		sortY.sortGivenArray();  //sort it
 		Q = sortY.getSortedArray();  //Return to Q array
 
-		//printArray(P);  //Print provided array.
 
-		/* call efficientClosestPair here */
-		PointPair point = efficientClosestPair(P,Q);
+		PointPair pointV = efficientClosestPair(P,Q);
+
+		//PointPair pointR = efficientClosestPair(Pr,Qr);
 
 	}
 
@@ -75,64 +75,67 @@ public class ClosestPair {
 	public static PointPair efficientClosestPair(ArrayList<Point> pointsXOrdered, ArrayList<Point> pointsYOrdered) {
 		//System.out.println("Number of points: " + pointsXOrdered.size());
 		//printArray(pointsXOrdered);
-
-		if(pointsXOrdered.size() == 0) return null;
-		else if (pointsXOrdered.size() <= 1){  //for 2 or 3 points
-			ArrayList<Point> brute = new ArrayList<>();
-			for(int i = 0; i <= pointsXOrdered.size()-1;i++){
+		int sizeV = Math.max(pointsXOrdered.size(), pointsXOrdered.size());
+		//if(pointsXOrdered.size() == 0) return null;
+		if (sizeV <= 3){  //for 2 or 3 points
+			ArrayList<Point> brute = new ArrayList<>();  //bruteforce takes a single arraylist
+			for(int i = 0; i < sizeV;i++){
 				Point point = new Point(pointsXOrdered.get(i).x, pointsXOrdered.get(i).y);
 				brute.add(point);
-
 			}
-			printArray(pointsXOrdered);
-			PointPair pointPair = bruteClosestPair(brute);
-			System.out.println("final point pair");
-			System.out.println(pointPair);
-			return pointPair;
+
+			return bruteClosestPair(brute);
+
 
 		} else {
 
-			System.out.println("efficientClosestPair");
-			int size = pointsXOrdered.size();
-			System.out.println("Size of X " + size);
-			int halfSize = size/2;
-			System.out.println("Half Size of X " + halfSize);
-			int sizeY = pointsYOrdered.size();
-			System.out.println("Size of Y " + size);
-			int halfSizeY = sizeY/2;
-			System.out.println("Half Size of Y " + halfSize);
+			System.out.println("efficientClosestPair Round ");
+			//printArray(pointsXOrdered);
+			//printArray(pointsYOrdered);
 
+
+			int sizeX = pointsXOrdered.size();
+			System.out.println("Size of X " + sizeX);
+			int sizeY = pointsYOrdered.size();
+			int halfSizeX = Math.floorDiv(sizeX,2);
+			int halfSizeY = Math.floorDiv(sizeX,2);
+
+			////////////////////////
 			ArrayList<Point> Pl = new ArrayList<>();
-			for(int i = 0; i < halfSize;i++){
+			for(int i = 0; i < halfSizeX;i++){
 				Pl.add(pointsXOrdered.get(i));
 			}
 			System.out.println("Points of Pl");
 			printArray(Pl);
 
+			ArrayList<Point> Ql = new ArrayList<>();
+			for(int i = 0; i < halfSizeY;i++){
+				Ql.add(pointsYOrdered.get(i));
+			}
+			System.out.println("Points of Ql");
+			printArray(Ql);
+
 			ArrayList<Point> Pr = new ArrayList<>();
-			for(int i = halfSize; i < size;i++){
-				Pr.add(pointsXOrdered.get(i));
+			for(int i = halfSizeX; i < sizeX;i++){
+				Pr.add(pointsYOrdered.get(i));
 			}
 			System.out.println("Points of Pr");
 			printArray(Pr);
 
-			ArrayList<Point> Ql = new ArrayList<>();
-			for(int i = 0; i < halfSize;i++){
-				Ql.add(pointsYOrdered.get(i));
-			}
-
-			System.out.println("Points of Ql");
-			printArray(Ql);
-
 			ArrayList<Point> Qr = new ArrayList<>();
-			for(int i = pointsYOrdered.size(); i < pointsYOrdered.size()-1;i++){
-				Pr.add(pointsYOrdered.get(i));
+			for(int i = halfSizeY; i < sizeY;i++){
+				Qr.add(pointsXOrdered.get(i));
 			}
+			System.out.println("Points of Qr");
+			printArray(Qr);
+
+			/////////////////////////////
+			System.out.println("EffiicentClosestPair");
+			PointPair dist = efficientClosestPair(Pl,Ql);
 
 
-			PointPair left = efficientClosestPair(Pl,Ql);
 			PointPair right = efficientClosestPair(Pr,Qr);
-
+			//System.out.println("Size of Pr is " + right);
 
 
 			return null;
@@ -146,26 +149,30 @@ public class ClosestPair {
 		System.out.println("Brute Closest Pair Size = " + points.size());
 		//PointPair pointPair = new PointPair(points.get(0),points.get(1));
 		double d = 0;
-		int index = 0;
+		int indexI = 0;
+		int indexJ = 0;
 		for(int i = 0; i < points.size(); i++){
 			for(int j = i +1; j < points.size(); j++){
 
 				double dist = Math.sqrt(Math.pow((points.get(i).x - points.get(j).x), 2) +
 						Math.pow((points.get(i).y - points.get(j).y), 2));
-				if(d <= dist){
-					d = dist;
 
+
+				if(d <= dist){
+					indexI = i;
+					indexJ = j;
+					d = dist;
 				}
-			}
-			index = i;
+			}//index = i;
 		}
 
 		System.out.println("Closest distance is: " + d);
-		System.out.println("index is "+ index);
-		//System.out.println("point is:"+ points.get(1));
+
+		System.out.println("points in bruteforce:");
 		printArray(points);
 		//Point point1 = new Point()
-		PointPair pointPair = new PointPair(points.get(0),points.get(index));
+		PointPair pointPair = new PointPair(points.get(indexI),points.get(indexJ));
+		System.out.println("returned point pair from brute " + pointPair);
 		return pointPair;
 	}
 
@@ -288,4 +295,3 @@ class MergeSort{
 
 
 }
-
