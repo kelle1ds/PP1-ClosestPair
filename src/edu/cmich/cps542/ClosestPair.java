@@ -24,13 +24,13 @@ public class ClosestPair {
 	public static void main(String[] args) throws IOException {
 
 		/* load data from points.txt here */
-		File file = new File("points3.txt"); //file to read
+		File file = new File("points.txt"); //file to read
 		FileReader inputFil = new FileReader(file);  //reader
 		Scanner scanner = new Scanner(inputFil);  //scanner
 		ArrayList<Point> P = new ArrayList<>();  //P array for holding sorted X values
 		ArrayList<Point> Q = new ArrayList<>();  //Q array for holding sorted Y values
 
-		int k = 0; //Used to count number of points
+		//int k = 0; //Used to count number of points
 
 		while (scanner.hasNext()) {
 			String token1 = scanner.next();
@@ -46,7 +46,7 @@ public class ClosestPair {
 			Point point = new Point(num1, num2);
 			P.add(point);
 			Q.add(point);
-			k++;  //count number of points
+			//k++;  //count number of points
 		}
 		scanner.close();  //Close that there scanner thingy
 
@@ -59,24 +59,21 @@ public class ClosestPair {
 
 		P = sortX.getSortedArray();  //Return sorted array back to P
 
-		//MergeSortY sortY = new MergeSortY(Q);
 		MergeSort sortY = new MergeSort(Q, 1); //Any side other than 1 is point.y
 		sortY.sortGivenArray();  //sort it
 		Q = sortY.getSortedArray();  //Return to Q array
 
-
 		PointPair pointV = efficientClosestPair(P,Q);
 
-		System.out.println("final point pair is " + pointV.toString());
-
-		//PointPair pointR = efficientClosestPair(Pr,Qr);
+		System.out.println("Final " + pointV);
+		System.out.println("Short distance is: " + pointV.distBetweenPoints());
 
 	}
 
 
 	public static PointPair efficientClosestPair(ArrayList<Point> pointsXOrdered, ArrayList<Point> pointsYOrdered) {
 
-		int sizeV = Math.max(pointsXOrdered.size(), pointsXOrdered.size());
+		int sizeV = pointsXOrdered.size();
 		//if(pointsXOrdered.size() == 0) return null;
 		if (sizeV <= 3){  //for 2 or 3 points
 			ArrayList<Point> brute = new ArrayList<>();  //bruteforce takes a single arraylist
@@ -91,10 +88,8 @@ public class ClosestPair {
 
 		} else {
 
-			System.out.println("efficientClosestPair Round ");
-
 			int sizeX = pointsXOrdered.size();
-			System.out.println("Size of X " + sizeX);
+			System.out.println("efficientClosestPair Round with Six of X = " + sizeX);
 			int sizeY = pointsYOrdered.size();
 			int halfSizeX = Math.floorDiv(sizeX,2);
 			int halfSizeY = Math.floorDiv(sizeX,2);
@@ -107,10 +102,10 @@ public class ClosestPair {
 			//System.out.println("Points of Pl");
 			//printArray(Pl);
 
-			ArrayList<Point> Ql = new ArrayList<>();
+			/*ArrayList<Point> Ql = new ArrayList<>();
 			for(int i = 0; i < halfSizeY;i++){
 				Ql.add(pointsYOrdered.get(i));
-			}
+			}*/
 			//System.out.println("Points of Ql");
 			//printArray(Ql);
 
@@ -121,42 +116,41 @@ public class ClosestPair {
 			//System.out.println("Points of Pr");
 			//printArray(Pr);
 
-			ArrayList<Point> Qr = new ArrayList<>();
+			/*ArrayList<Point> Qr = new ArrayList<>();
 			for(int i = halfSizeY; i < sizeY;i++){
 				Qr.add(pointsXOrdered.get(i));
-			}
+			}*/
 			//System.out.println("Points of Qr");
 			//printArray(Qr);
 
 			/////////////////////////////
 
-			PointPair left = efficientClosestPair(Pl,Ql);
-			PointPair right = efficientClosestPair(Pr,Qr);
+			PointPair left = efficientClosestPair(Pl,Pr);
+			///////PointPair right = efficientClosestPair(Pr,Qr);
 			System.out.println("End of recursion");
-			//////////////////////////////
 
-			//double distanceLeft = left.a.x - left.b.x;
 
-			System.out.println("Left PP initial distance is: " + left.distBetweenPoints());
-			System.out.println("right PP initial distance is: " + right.distBetweenPoints());
+			//System.out.println("Left PP initial distance is: " + left.distBetweenPoints());
+			//////System.out.println("right PP initial distance is: " + right.distBetweenPoints());
 
-			PointPair minPoint;
+			PointPair minPoint = left;
 
+			/*
 			if(left.distBetweenPoints() >= right.distBetweenPoints()){
 
 				minPoint = right; //new PointPair(right.a,right.b);
 			} else {
 				minPoint = left;
-			}
+			}*/
 
-			System.out.println("minimum PP initial distance is: " + minPoint.distBetweenPoints());
+			System.out.println("minimum initial distance is: " + minPoint.distBetweenPoints());
 
 
-			double d = Math.min(left.distBetweenPoints(), right.distBetweenPoints());
-
+			//double d = Math.min(left.distBetweenPoints(), right.distBetweenPoints());
+			double d = minPoint.distBetweenPoints();
 			double m = pointsXOrdered.get(halfSizeX-1).x;  //get mid-x value from P
 
-			System.out.println("Median x value is: " + m);
+			//System.out.println("Median x value is: " + m);
 
 			ArrayList<Point> S = new ArrayList<>();  //array to hold points to compare
 			for(int i = 0; i < pointsXOrdered.size(); i++){
@@ -166,14 +160,13 @@ public class ClosestPair {
 				}
 			}
 
-			System.out.println("Size of S is: " + S.size());
+			//System.out.println("Size of S is: " + S.size());
 			double dminsq = d*d;
-			System.out.println("dminsq = " + dminsq);
+			//System.out.println("dminsq = " + dminsq);
 
 			int indexI = 0;
 			int indexK = 0;
 			for (int i = 0; i < S.size()-2; i++){
-				System.out.println(i);
 				int k = i + 1;
 				while ((k <= S.size() - 1) && (S.get(i).y < dminsq)){
 					double point1X = S.get(k).x;
@@ -188,12 +181,12 @@ public class ClosestPair {
 				indexI = i;  //Used to return closest pair
 
 			}
-			System.out.println("index I = " + indexI);
-			System.out.println("index K = " + indexK);
+			//System.out.println("index I = " + indexI);
+			//System.out.println("index K = " + indexK);
 
 			PointPair midPoints = new PointPair(S.get(indexK), S.get(indexI));
-			System.out.println(minPoint);
-			System.out.println(midPoints);
+			//System.out.println(minPoint);
+			//System.out.println(midPoints);
 
 			PointPair returnedPoint;
 			if(midPoints.distBetweenPoints() >= minPoint.distBetweenPoints()){
@@ -203,8 +196,6 @@ public class ClosestPair {
 			}
 
 		}
-
-		//return null;
 
 	}
 
