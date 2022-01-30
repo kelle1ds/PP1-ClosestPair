@@ -11,7 +11,6 @@ package edu.cmich.cps542;
  *
  */
 
-//package edu.cmich.cps542;
 
 import java.util.ArrayList;
 import java.io.*;
@@ -54,16 +53,14 @@ public class ClosestPair {
 		/* use your sort method here */
 
 		MergeSort sortX = new MergeSort(P, 0);  //Side 0 is for point.x values
-		//mergeSort.sort(array);
 		sortX.sortGivenArray();  //Sort it
-
 		P = sortX.getSortedArray();  //Return sorted array back to P
 
 		MergeSort sortY = new MergeSort(Q, 1); //Any side other than 1 is point.y
 		sortY.sortGivenArray();  //sort it
 		Q = sortY.getSortedArray();  //Return to Q array
 
-		PointPair pointV = efficientClosestPair(P,Q);
+		PointPair pointV = efficientClosestPair(P,Q);  //Call to recursive algo
 
 		System.out.println("Final " + pointV);
 		System.out.println("Short distance is: " + pointV.distBetweenPoints());
@@ -74,7 +71,7 @@ public class ClosestPair {
 	public static PointPair efficientClosestPair(ArrayList<Point> pointsXOrdered, ArrayList<Point> pointsYOrdered) {
 
 		int sizeV = pointsXOrdered.size();
-		//if(pointsXOrdered.size() == 0) return null;
+		if(pointsXOrdered.size() == 0) return null;
 		if (sizeV <= 3){  //for 2 or 3 points
 			ArrayList<Point> brute = new ArrayList<>();  //bruteforce takes a single arraylist
 			for(int i = 0; i < sizeV;i++){
@@ -111,7 +108,7 @@ public class ClosestPair {
 
 			ArrayList<Point> Pr = new ArrayList<>();
 			for(int i = halfSizeX; i < sizeX;i++){
-				Pr.add(pointsYOrdered.get(i));
+				Pr.add(pointsXOrdered.get(i));
 			}
 			//System.out.println("Points of Pr");
 			//printArray(Pr);
@@ -128,9 +125,8 @@ public class ClosestPair {
 			PointPair left = efficientClosestPair(Pl,Pr);   //Recursion Call
 			///////PointPair right = efficientClosestPair(Pr,Qr);
 			System.out.println("End of recursion");
+			System.out.println("Size of Q " + pointsYOrdered.size());
 
-			//System.out.println("Left PP initial distance is: " + left.distBetweenPoints());
-			//////System.out.println("right PP initial distance is: " + right.distBetweenPoints());
 
 			PointPair minPoint = left;
 
@@ -150,7 +146,10 @@ public class ClosestPair {
 			double m = pointsXOrdered.get(halfSizeX-1).x;  //get mid-x value from P
 
 			//System.out.println("Median x value is: " + m);
+			//System.out.println("Size of Q  " + pointsYOrdered.size());
+			//System.out.println("Size of P  " + pointsXOrdered.size());
 
+			//Creation of S array
 			ArrayList<Point> S = new ArrayList<>();  //array to hold points to compare
 			for(int i = 0; i < pointsXOrdered.size(); i++){
 				double x = pointsXOrdered.get(i).x;
@@ -158,13 +157,15 @@ public class ClosestPair {
 					S.add(pointsXOrdered.get(i));
 				}
 			}
-
+			System.out.println("Size of S" + S.size());
 			double dminsq = d*d;
 
 			int indexI = 0;			//Used to store indexes for closest pair
 			int indexK = 0;
 			for (int i = 0; i < S.size()-2; i++){
 				int k = i + 1;
+
+				//System.out.println("size of indexI " + indexI);
 				while ((k <= S.size() - 1) && (S.get(i).y < dminsq)){
 					double point1X = S.get(k).x;
 					double point1Y = S.get(k).y;
@@ -191,9 +192,13 @@ public class ClosestPair {
 
 	}
 
+	/**
+	 * bruteForce Algo
+	 * @param points  Arraylist that is passed into function.  List contains two or three points.
+	 * @return PointPair pointPair  The closest point pair is returned.
+	 */
 	public static PointPair bruteClosestPair(ArrayList<Point> points) {
-		System.out.println("Brute Closest Pair Size = " + points.size());
-		//PointPair pointPair = new PointPair(points.get(0),points.get(1));
+		//System.out.println("Brute Closest Pair Size = " + points.size());
 		double d = 0;
 		int indexI = 0;
 		int indexJ = 0;
@@ -211,16 +216,12 @@ public class ClosestPair {
 			}
 		}
 
-		System.out.println("Closest distance is: " + d);
-
-		//System.out.println("points in bruteforce:");
-		printArray(points);
+		//printArray(points);
 		PointPair pointPair = new PointPair(points.get(indexI),points.get(indexJ)); //Returned pair
-		//System.out.println("returned point pair from brute " + pointPair);
 		return pointPair;
 	}
 
-
+	//We developed a class named MergeSort for sorting the list.  This class follows at the end of this class
 	public static ArrayList<Point> sort(ArrayList<Point> points) {
 
 		/* No call to sort method here.  Implement something that is divide-
@@ -231,6 +232,14 @@ public class ClosestPair {
 
 	////////////////////////////////////////////////////////////////////
 	/* A utility function to print array of size n */
+
+	/**
+	 * Used to print an arraylist of point objects.
+	 * Mainly used for testing and debugging
+	 * @name printArray
+	 * @param arr  Passed in array
+	 *
+	 */
 	public static void printArray(ArrayList<Point> arr)
 	{
 		ListIterator<Point> iterator = arr.listIterator(0);
@@ -243,17 +252,24 @@ public class ClosestPair {
 	}
 }
 
-/* Java class for Merge Sort with arraylist*/
-//Changes are comming
+/**
+ * @name MergeSort
+ * The basis for this class was obtained from the following source
+ * https://www.withexample.com/merge-sort-using-arraylist-java-example/
+ */
 class MergeSort{
 	private ArrayList<Point> inputArrayX;  //Array for holding values
 	private int side = 0;
 
-	public ArrayList<Point> getSortedArray() {
+	public ArrayList<Point> getSortedArray() {  //Return SortedArray.
 
 		return inputArrayX;
 	}
+	public void sortGivenArray(){  //This method executes the divide function.
 
+		divide(0, this.inputArrayX.size()-1);
+
+	}
 	public MergeSort(ArrayList<Point> inputArray){
 
 		this.inputArrayX = inputArray;
@@ -264,12 +280,12 @@ class MergeSort{
 		this.side = side;
 	}
 
-	public void sortGivenArray(){
 
-		divide(0, this.inputArrayX.size()-1);
-
-	}
-
+	/**
+	 * @name Dividing function.
+	 * @param startIndex  Start index of array to be divided
+	 * @param endIndex  End index of array to be divided
+	 */
 	public void divide(int startIndex,int endIndex){
 
 		//Divide till you break down your arraylist to single point nodes
@@ -283,7 +299,12 @@ class MergeSort{
 		}
 	}
 
-
+	/**
+	 * @name merge name of function
+	 * @param startIndex Start index
+	 * @param midIndex median index
+	 * @param endIndex  ending index
+	 */
 	public void merge(int startIndex,int midIndex,int endIndex){
 
 		ArrayList<Point> mergedSortedArray = new ArrayList<>();
@@ -293,7 +314,7 @@ class MergeSort{
 
 		if(side == 0) {
 			while (leftIndex <= midIndex && rightIndex <= endIndex) {
-				//if(inputArray.get(leftIndex).x)
+
 				if (inputArrayX.get(leftIndex).x <= inputArrayX.get(rightIndex).x) {
 
 					mergedSortedArray.add(inputArrayX.get(leftIndex));
@@ -306,7 +327,7 @@ class MergeSort{
 			}
 		}else{
 			while (leftIndex <= midIndex && rightIndex <= endIndex) {
-				//if(inputArray.get(leftIndex).x)
+
 				if (inputArrayX.get(leftIndex).y <= inputArrayX.get(rightIndex).y) {
 
 					mergedSortedArray.add(inputArrayX.get(leftIndex));
@@ -336,6 +357,4 @@ class MergeSort{
 			j++;
 		}
 	}
-
-
 }
