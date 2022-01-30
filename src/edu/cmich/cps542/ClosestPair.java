@@ -3,6 +3,8 @@ package edu.cmich.cps542;
 /**
  * <h1>Team Programming Project One</h1
  * CPS 542
+ * David Kelley
+ * Lucas Leodler
  * @author kelle1ds
  * @version 1.0
  * @since 2022-1-26
@@ -17,7 +19,7 @@ import java.util.ListIterator;
 import java.util.Scanner;
 
 /**
- * Pefo
+ * Class for performing closest pairs
  */
 public class ClosestPair {
 
@@ -30,8 +32,7 @@ public class ClosestPair {
 		ArrayList<Point> P = new ArrayList<>();  //P array for holding sorted X values
 		ArrayList<Point> Q = new ArrayList<>();  //Q array for holding sorted Y values
 
-		//int k = 0; //Used to count number of points
-
+		//Basic scanner.  () and commas are removed
 		while (scanner.hasNext()) {
 			String token1 = scanner.next();
 			String replaced = token1.replaceAll("[()]", "");
@@ -46,7 +47,6 @@ public class ClosestPair {
 			Point point = new Point(num1, num2);
 			P.add(point);
 			Q.add(point);
-			//k++;  //count number of points
 		}
 		scanner.close();  //Close that there scanner thingy
 
@@ -125,10 +125,9 @@ public class ClosestPair {
 
 			/////////////////////////////
 
-			PointPair left = efficientClosestPair(Pl,Pr);
+			PointPair left = efficientClosestPair(Pl,Pr);   //Recursion Call
 			///////PointPair right = efficientClosestPair(Pr,Qr);
 			System.out.println("End of recursion");
-
 
 			//System.out.println("Left PP initial distance is: " + left.distBetweenPoints());
 			//////System.out.println("right PP initial distance is: " + right.distBetweenPoints());
@@ -160,11 +159,9 @@ public class ClosestPair {
 				}
 			}
 
-			//System.out.println("Size of S is: " + S.size());
 			double dminsq = d*d;
-			//System.out.println("dminsq = " + dminsq);
 
-			int indexI = 0;
+			int indexI = 0;			//Used to store indexes for closest pair
 			int indexK = 0;
 			for (int i = 0; i < S.size()-2; i++){
 				int k = i + 1;
@@ -179,14 +176,9 @@ public class ClosestPair {
 					k = k + 1;
 				}
 				indexI = i;  //Used to return closest pair
-
 			}
-			//System.out.println("index I = " + indexI);
-			//System.out.println("index K = " + indexK);
 
 			PointPair midPoints = new PointPair(S.get(indexK), S.get(indexI));
-			//System.out.println(minPoint);
-			//System.out.println(midPoints);
 
 			PointPair returnedPoint;
 			if(midPoints.distBetweenPoints() >= minPoint.distBetweenPoints()){
